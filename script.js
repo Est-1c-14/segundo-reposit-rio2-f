@@ -1,22 +1,28 @@
-import {PALAVRAS_RUINS} from "./palavrasRuins.js"
+import {PALAVRAS_RUINS} from "./palavrasRuins.js";
 
 const botaoMostraPalavras = document.querySelector('#botao-palavrachave');
 
-botaoMostraPalavras.addEventListener('click', mostraPalavraChave);
+botaoMostraPalavras.addEventListener('click', mostraPalavrasChave);
 
-function mostraPalavraChave() {
+function mostraPalavrasChave() {
     //alert("Fui clicado!");
     const texto = document.querySelector('#entrada-de-texto').value;
     const campoResultado = document.querySelector('#resultado-palavrachave');
-    const palavras = processaTexto(texto);
+    const palavrasChave = processaTexto(texto);
 
-    campoResultado.textContent = palavras.join(", ");
+    campoResultado.textContent = palavrasChave.join(", ");
 }
 
 function processaTexto(texto) {
     //let palavras = texto.split(/\s+/);  "retirar espaços"
     //let palavras = texto.split(/[^a-zA-Z]+/); "letras minusculas e maiusculas"
-    let palavras = texto.split("/\P{L}+/u/");  /* \P negação;  {L} conjunto de letras; + uma ou mais ocorrências; u Unicode*/
+    let palavras = texto.split(/\P{L}+/u);  // \P negação;  {L} conjunto de letras; + uma ou mais ocorrências; u Unicode
+
+    for (let i in palavras) {
+        palavras[i] = palavras[i].toLowerCase();
+    }
+
+    palavras = tiraPalavrasRuins(palavras);
 
     const frequencias = contaFrequencias(palavras);
 
@@ -37,16 +43,14 @@ function contaFrequencias(palavras) {
             }
         }
     }
-    return palavras;
+    return frequencias;
 }
 
-function tiraPalavraRuins(palavras) {
-    //const PALAVRAS_RUINS = new SetInterval("para", "uma", "nós"]); //tem muito mais no arquivo JS importado
-    
-    const palavrasBoas = [];
-    for (let palavra of palavra) {
-        if (!PALAVRAS_RUINS.has(palavra) && palavra.lenght > 
-        2){
+function tiraPalavrasRuins(palavras) {
+    //const PALAVRAS_RUINS = new setInterval(["para", "uma", "nós"]); //tem muito mais no arquivo JS importado
+    const palavrasBoas =[];
+    for (let palavra of palavras) {
+        if (!PALAVRAS_RUINS.has(palavra) && palavra.length > 2) {
             palavrasBoas.push(palavra);
         }
     }
